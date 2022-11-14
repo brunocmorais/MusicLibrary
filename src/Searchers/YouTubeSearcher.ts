@@ -1,9 +1,10 @@
 import * as ytMusic from 'node-youtube-music';
 import Album from '../Model/Album.js';
+import ISearcher from './ISearcher.js';
 
-export default class YouTubeSearcher {
+export default class YouTubeSearcher implements ISearcher {
 
-    public static async search(album: Album) {
+    public async search(album: Album) {
 
         const albums = await ytMusic.searchAlbums(album.name + " - " + album.artist.name);
     
@@ -13,3 +14,4 @@ export default class YouTubeSearcher {
         return "https://music.youtube.com/browse/" + albums[0].albumId;
     }
 }
+

@@ -4,7 +4,7 @@ import YouTubeAnalyzer from "../Analyzers/YouTubeAnalyzer.js";
 
 export default class AnalyzerFactory {
 
-    public static build(type: AnalyzerType) {
+    public build(type: AnalyzerType) {
 
         switch (type) {
             case AnalyzerType.MusicBrainz:

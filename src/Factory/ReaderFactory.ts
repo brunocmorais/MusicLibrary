@@ -5,7 +5,7 @@ import TagReader from "../Readers/TagReader.js";
 
 export default class ReaderFactory {
 
-    public static build(type: ReaderType) {
+    public build(type: ReaderType) {
 
         switch (type) {
             case ReaderType.CsvLibrary:

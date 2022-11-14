@@ -6,7 +6,7 @@ import { FileBuilderType } from "../Model/FileBuilderType.js";
 
 export default class FileBuilderFactory {
 
-    public static build(type: FileBuilderType) {
+    public build(type: FileBuilderType) {
 
         switch (type) {
             case FileBuilderType.LibraryCsv:

@@ -11,13 +11,13 @@ export default class File {
         await fs.writeFile(path, content);
     }
 
-    public static async getFileList(dir: string) {
+    public static async listFilesInDirectory(dir: string) {
         const files = await fs.readdir(dir, { withFileTypes: true });
         const list = new Array<string>();
         
         for (const file of files) {
             if (file.isDirectory())
-                list.push(...await this.getFileList(path.join(dir, file.name)));
+                list.push(...await this.listFilesInDirectory(path.join(dir, file.name)));
             else
                 list.push(path.join(dir, file.name));
         }

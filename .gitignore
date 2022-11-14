@@ -3,3 +3,4 @@ dist/**
 *.csv
 *.txt
 *.m3u
+package-lock.json

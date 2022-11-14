@@ -10,7 +10,7 @@ const acceptedFileTypes = [".m4a", ".mp3", ".ogg", ".wma"];
 
 export default class TagReader implements IReader<Library> {
 
-    public async read(directory: string) {
+    public async read(directory: string)  {
 
         if (!directory)
             throw new Error("Music path is missing!");
@@ -18,7 +18,7 @@ export default class TagReader implements IReader<Library> {
         if (!await File.isDirectory(directory))
             throw new Error("Path to read must be a directory!");
         
-        const files = await File.getFileList(directory);
+        const files = await File.listFilesInDirectory(directory);
         const library = new Library();
 
         for (const file of files) {

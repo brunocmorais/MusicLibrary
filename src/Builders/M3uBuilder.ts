@@ -1,5 +1,5 @@
-import Library from "../Model/Library";
-import IFileBuilder from "./IFileBuilder";
+import Library from "../Model/Library.js";
+import IFileBuilder from "./IFileBuilder.js";
 
 export default class M3uBuilder implements IFileBuilder<Library> {
     
@@ -9,7 +9,7 @@ export default class M3uBuilder implements IFileBuilder<Library> {
 
         for (let song of library.songs) {
 
-            content += `#EXTINF:${song.duration},${song.album.artist.name}` + " - " +
+            content += `#EXTINF:${song.duration},${song.album.artist.name} - ` +
                 `${song.album.name} - ${song.track}\n`;
             content += song.path + "\n";
         }
