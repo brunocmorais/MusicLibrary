@@ -8,10 +8,15 @@ import { FileBuilderType } from "../Model/FileBuilderType.js";
 import CsvAlbumFileBuilder from "../Builders/CsvAlbumFileBuilder.js";
 import CsvLibraryFileReader from "../Readers/CsvLibraryFileReader.js";
 import CsvLibraryFileBuilder from "../Builders/CsvLibraryFileBuilder.js";
-import TxtUrlFileBuilder from "../Builders/TxtUrlFileBuilder.js";
+import TxtAlbumUrlFileBuilder from "../Builders/TxtAlbumUrlFileBuilder.js";
 import M3uBuilder from "../Builders/M3uBuilder.js";
 import AbstractFactory from "../Factory/AbstractFactory.js";
 import Album from "../Model/Album.js";
+import CsvFileReader from "../Readers/CsvFileReader.js";
+import CsvAlbumFileReader from "../Readers/CsvAlbumFileReader.js";
+import IReader from "../Readers/IReader.js";
+import IFileBuilder from "../Builders/IFileBuilder.js";
+import TxtMusicUrlFileBuilder from "../Builders/TxtMusicUrlFileBuilder.js";
 
 export default class CLI {
 
@@ -51,8 +56,8 @@ export default class CLI {
         stdout.write("Available commands:\n\n");
         stdout.write("csvLibrary <musicPath> <fileNameToExportCsv>\n");
         stdout.write("csvAlbums <musicPath> <fileNameToExportCsv>\n");
-        stdout.write("analyse <analyzer (MusicBrainz or YouTube)> <libraryPath>\n");
-        stdout.write("search <csvAlbumsPath> <fileNameToExportTxt>\n");
+        stdout.write("analyze <analyzer (MusicBrainz or YouTube)> <libraryPath>\n");
+        stdout.write("search <csvPath> <fileNameToExportTxt>\n");
         stdout.write("export <libraryPath> <fileNameToExportM3u>\n\n");
     }
 
@@ -100,7 +105,7 @@ export default class CLI {
 
     private static async getLibrary(path: string) {
 
-        let reader : TagReader | CsvLibraryFileReader;
+        let reader : IReader<any>;
         const readerFactory = AbstractFactory.buildReaderFactory();
 
         if (await File.isDirectory(path))
@@ -115,13 +120,25 @@ export default class CLI {
 
     private static async search() {
 
-        const reader = AbstractFactory.buildReaderFactory().build(ReaderType.CsvAlbum);
-        const csvAlbumPath = argv[3];
+        const csvPath = argv[3];
         const txtPath = argv[4];
-        const albums = await reader.read(csvAlbumPath) as Album[];
-        const builder = AbstractFactory.buildFileBuilderFactory()
-            .build(FileBuilderType.UrlTxt) as TxtUrlFileBuilder;
-        const content = await builder.build(albums);
+        let builder: IFileBuilder<any>;
+        let reader : IReader<any>; 
+        let content: string;
+        
+        try {
+            builder = AbstractFactory.buildFileBuilderFactory()
+                .build(FileBuilderType.UrlAlbumTxt) as TxtAlbumUrlFileBuilder;
+            reader = AbstractFactory.buildReaderFactory().build(ReaderType.CsvAlbum); 
+            const albums = await reader.read(csvPath) as Album[];
+            content = await builder.build(albums);
+        } catch (error) { // could not read csvAlbum, maybe it is csvLibrary
+            builder = AbstractFactory.buildFileBuilderFactory()
+                .build(FileBuilderType.UrlLibraryTxt) as TxtMusicUrlFileBuilder;
+            reader = AbstractFactory.buildReaderFactory().build(ReaderType.CsvLibrary); 
+            const library = await reader.read(csvPath) as Library;
+            content = await builder.build(library);
+        }
         
         await File.writeAsync(txtPath, content);
 

@@ -2,6 +2,7 @@
 export enum FileBuilderType {
     LibraryCsv,
     AlbumCsv,
-    UrlTxt,
+    UrlLibraryTxt,
+    UrlAlbumTxt,
     M3u
 }

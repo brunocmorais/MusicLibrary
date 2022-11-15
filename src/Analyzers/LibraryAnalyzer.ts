@@ -10,9 +10,11 @@ export default abstract class LibraryAnalyzer implements ILibraryAnalyzer {
 
         for (let album of library.albums) {
             const items = library.songs.filter(x => x.album.equals(album) && x.album.artist.equals(album.artist));
-            const count = await this.getTrackCount(album);
+            let count: number;
 
-            if (count == 0){
+            try {
+                count = await this.getTrackCount(album);   
+            } catch (error) {
                 analysis.push(`Não foi possível obter informações do ${album.name} - ${album.artist.name}!`);
                 continue;
             }

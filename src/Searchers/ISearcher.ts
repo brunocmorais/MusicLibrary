@@ -1,5 +1,7 @@
 import Album from '../Model/Album.js';
+import Song from '../Model/Song.js';
 
 export default interface ISearcher {
-    search(album: Album): Promise<string>;
+    searchAlbum(album: Album): Promise<string>;
+    searchSong(song: Song): Promise<string>;
 }

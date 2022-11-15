@@ -1,7 +1,8 @@
 import CsvAlbumFileBuilder from "../Builders/CsvAlbumFileBuilder.js";
 import CsvLibraryFileBuilder from "../Builders/CsvLibraryFileBuilder.js";
 import M3uBuilder from "../Builders/M3uBuilder.js";
-import TxtUrlFileBuilder from "../Builders/TxtUrlFileBuilder.js";
+import TxtAlbumUrlFileBuilder from "../Builders/TxtAlbumUrlFileBuilder.js";
+import TxtMusicUrlFileBuilder from "../Builders/TxtMusicUrlFileBuilder.js";
 import { FileBuilderType } from "../Model/FileBuilderType.js";
 
 export default class FileBuilderFactory {
@@ -13,8 +14,10 @@ export default class FileBuilderFactory {
                 return new CsvLibraryFileBuilder();
             case FileBuilderType.AlbumCsv:
                 return new CsvAlbumFileBuilder();
-            case FileBuilderType.UrlTxt:
-                return new TxtUrlFileBuilder();
+            case FileBuilderType.UrlLibraryTxt:
+                return new TxtMusicUrlFileBuilder();
+            case FileBuilderType.UrlAlbumTxt:
+                return new TxtAlbumUrlFileBuilder();
             case FileBuilderType.M3u:
                 return new M3uBuilder();
             default:
