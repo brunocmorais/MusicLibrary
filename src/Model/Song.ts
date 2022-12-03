@@ -7,6 +7,7 @@ export default class Song {
     private readonly _track: number;
     private readonly _duration: number;
     private readonly _path: string;
+    private readonly _isrc: string;
 
     public get album(): Album {
         return this._album;
@@ -28,13 +29,18 @@ export default class Song {
         return this._path;
     }
 
+    public get isrc() : string {
+        return this._isrc;
+    }
+
     public constructor(album: Album, title: string, track: number,
-        duration: number, path: string) {
+        duration: number, path: string, isrc: string) {
         this._album = album;
         this._title = title;
         this._track = track; 
         this._duration = duration;
         this._path = path;
+        this._isrc = isrc;
     }
 
     public equals(song: Song) {
@@ -42,7 +48,8 @@ export default class Song {
                song.title === this.title &&
                song.track === this.track &&
                song.duration === this.duration &&
-               song.path === this.path;
+               song.path === this.path &&
+               song.isrc === this.isrc;
     }
 }
 

@@ -9,8 +9,7 @@ export default class M3uBuilder implements IFileBuilder<Library> {
 
         for (let song of library.songs) {
 
-            content += `#EXTINF:${song.duration},${song.album.artist.name} - ` +
-                `${song.album.name} - ${song.track}\n`;
+            content += `#EXTINF:${song.duration},${song.album.artist.name} - ${song.title}\n`;
             content += song.path + "\n";
         }
 

@@ -6,10 +6,10 @@ export default class CsvAlbumFileBuilder implements IFileBuilder<Album[]> {
 
     public async build(albums: Album[]) {
         
-        let csv = "artist,album\n";
+        let csv = "title,artist\n";
     
         for (let album of albums)
-            csv += `"${album.artist.name}","${album.name}"\n`;
+            csv += `"${album.name}","${album.artist.name}"\n`;
     
         return csv;
     }

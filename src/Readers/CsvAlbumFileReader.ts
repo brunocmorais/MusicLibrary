@@ -12,8 +12,8 @@ export default class CsvAlbumFileReader extends CsvFileReader<Album[]> {
         for (const line of lines) {
 
             const data = this.getData(line);
-            const artist = new Artist(data[0]);
-            const album = new Album(artist, data[1]);
+            const artist = new Artist(data[1]);
+            const album = new Album(artist, data[0]);
 
             albums.push(album);
         }

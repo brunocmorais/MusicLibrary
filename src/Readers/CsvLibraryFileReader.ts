@@ -16,7 +16,7 @@ export default class CsvLibraryFileReader extends CsvFileReader<Library> {
             const data = this.getData(line);
             const artist = new Artist(data[1]);
             const album = new Album(artist, data[2]);
-            const song = new Song(album, data[0], parseInt("0" + data[3]), parseInt("0" + data[4]), data[5]);
+            const song = new Song(album, data[0], parseInt("0" + data[3]), parseInt("0" + data[4]), data[5], data[6]);
 
             library.add(song);
         }
