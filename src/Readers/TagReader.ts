@@ -30,10 +30,11 @@ export default class TagReader implements IReader<Library> {
 
             const info = await parseFile(file);
 
-            const artist = new Artist(info.common.artist ?? "");
+            const artist = new Artist(info.common.albumartist ?? "");
             const album = new Album(artist, info.common.album ?? "");
-            const song = new Song(album, info.common.title ?? "", info.common.track.no ?? 0,
-                Math.floor(info.format.duration) ?? 0, file, info.common.isrc ? info.common.isrc[0] : "");
+            const song = new Song(album, info.common.title ?? "", 
+                info.common.track.no ?? 0, Math.floor(info.format.duration) ?? 0, 
+                file, info.common.isrc ? info.common.isrc[0] : "");
 
             library.add(song);
         }

@@ -12,11 +12,11 @@ import TxtAlbumUrlFileBuilder from "../Builders/TxtAlbumUrlFileBuilder.js";
 import M3uBuilder from "../Builders/M3uBuilder.js";
 import AbstractFactory from "../Factory/AbstractFactory.js";
 import Album from "../Model/Album.js";
-import CsvFileReader from "../Readers/CsvFileReader.js";
-import CsvAlbumFileReader from "../Readers/CsvAlbumFileReader.js";
 import IReader from "../Readers/IReader.js";
 import IFileBuilder from "../Builders/IFileBuilder.js";
 import TxtMusicUrlFileBuilder from "../Builders/TxtMusicUrlFileBuilder.js";
+import TxtMissingSongsFileBuilder from "../Builders/TxtMissingSongsFileBuilder.js";
+import AnalysisResult from "../Model/AnalysisResult.js";
 
 export default class CLI {
 
@@ -56,7 +56,7 @@ export default class CLI {
         stdout.write("Available commands:\n\n");
         stdout.write("csvLibrary <musicPath> <fileNameToExportCsv>\n");
         stdout.write("csvAlbums <musicPath> <fileNameToExportCsv>\n");
-        stdout.write("analyze <analyzer (MusicBrainz or YouTube)> <libraryPath>\n");
+        stdout.write("analyze <libraryPath> <fileNameToExportMissingSongsTxt>\n");
         stdout.write("search <csvPath> <fileNameToExportTxt>\n");
         stdout.write("export <libraryPath> <fileNameToExportM3u>\n\n");
     }
@@ -90,17 +90,33 @@ export default class CLI {
 
     private static async analyze() {
         
-        const analyzerType = AnalyzerType[argv[3]];
-        const path = argv[4];
-        const library = await this.getLibrary(path);
+        const pathToRead = argv[3];
+        const pathToWrite = argv[4];
+        const library = await this.getLibrary(pathToRead);
 
-        const analyzer = AbstractFactory.buildAnalyserFactory().build(analyzerType);
-        const analysis = await analyzer.analyze(library);
+        const analyzer = AbstractFactory.buildAnalyserFactory().build(AnalyzerType.YouTube);
 
-        for (const line of analysis)
-            stdout.write(line + "\n");
+        stdout.write("Library analysis for missing songs started, this can take several minutes.\n");
+
+        const analysisResult = new AnalysisResult();
+        const albums = library.albums;
+        const txtBuilder = AbstractFactory.buildFileBuilderFactory().build(FileBuilderType.MissingSongsTxt);
+
+        for (let i = 0; i < albums.length; i++) {
+            
+            stdout.write(`Analysis of album ${i + 1} in ${albums.length}.\n`);
+            analysisResult.addItems(await analyzer.analyze(library, albums[i]));
+            const content = await (txtBuilder as TxtMissingSongsFileBuilder).build(analysisResult);
+
+            try {
+                await File.writeAsync(pathToWrite, content);
+            } catch (e) {
+                throw new Error("Could not write file!");
+            }
+        }
 
         stdout.write("Library analysis finished!\n");
+        stdout.write(`File '${pathToWrite}' created successfully!\n`);
     }
 
     private static async getLibrary(path: string) {

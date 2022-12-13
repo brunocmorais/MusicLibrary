@@ -10,10 +10,14 @@ export default class Library {
         return this._songs;
     }
 
+    public getSongs(album : Album) {
+        return this.songs.filter(song => song.album == album);
+    }
+
     public get albums() {
         const albums = new Array<Album>();
 
-        for (let song of this._songs)
+        for (let song of this.songs)
             if (albums.filter(a => a.equals(song.album)).length == 0)
                 albums.push(song.album);
 
@@ -23,7 +27,7 @@ export default class Library {
     public get artists() {
         const artists = new Array<Artist>();
 
-        for (const song of this._songs)
+        for (const song of this.songs)
             if (artists.filter(a => a.equals(song.album.artist)).length == 0)
                 artists.push(song.album.artist);
 
@@ -31,13 +35,13 @@ export default class Library {
     }
 
     public add(song: Song) {
-        this._songs.push(song);
+        this.songs.push(song);
     }
 
     public remove(song: Song) {
-        const index = this._songs.findIndex(x => x.equals(song));
+        const index = this.songs.findIndex(x => x.equals(song));
 
         if (index >= 0)
-            this._songs.splice(index, 1);
+            this.songs.splice(index, 1);
     }
 }

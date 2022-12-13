@@ -4,5 +4,6 @@ export enum FileBuilderType {
     AlbumCsv,
     UrlLibraryTxt,
     UrlAlbumTxt,
-    M3u
+    M3u,
+    MissingSongsTxt
 }

@@ -15,8 +15,8 @@
             "args": [
                 "start",
                 "analyze",
-                "YouTube",
-                "library.csv"
+                "library.csv",
+                "missingSongs.txt"
             ],
             "preLaunchTask": "Build"
         }

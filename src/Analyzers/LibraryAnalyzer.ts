@@ -1,32 +1,28 @@
 import Album from "../Model/Album.js";
+import AnalysisItem from "../Model/AnalysisItem.js";
+import AnalysisResult from "../Model/AnalysisResult.js";
 import Library from "../Model/Library.js";
-import ILibraryAnalyzer from "./ILibraryAnalyzer.js";
+import Song from "../Model/Song.js";
+import IAlbumAnalyzer from "./IAlbumAnalyzer.js";
 
-export default abstract class LibraryAnalyzer implements ILibraryAnalyzer {
+export default abstract class AlbumAnalyzer implements IAlbumAnalyzer {
     
-    public async analyze(library: Library) {
+    public async analyze(library: Library, album : Album) {
         
-        const analysis = new Array<string>();
+        const analysisItems = [];
 
-        for (let album of library.albums) {
-            const items = library.songs.filter(x => x.album.equals(album) && x.album.artist.equals(album.artist));
-            let count: number;
+        const currentSongs = library.songs.filter(s => s.album.equals(album));
+        const missingSongs = await this.getMissingSongs(album, currentSongs);
 
-            try {
-                count = await this.getTrackCount(album);   
-            } catch (error) {
-                analysis.push(`Não foi possível obter informações do ${album.name} - ${album.artist.name}!`);
-                continue;
-            }
-
-            for (let i = 1; i <= count; i++) {
-                if (items.filter(x => x.track == i).length == 0)
-                    analysis.push(`${album} - ${album.artist} faltando a faixa ${i}!`);
-            }
+        for (const missingSong of missingSongs) {
+            const songUrl = await this.searchSongUrl(missingSong);
+            const analysisItem = new AnalysisItem(missingSong, songUrl);
+            analysisItems.push(analysisItem);
         }
 
-        return analysis;
+        return analysisItems;
     }
 
-    public abstract getTrackCount(album: Album);
+    public abstract searchSongUrl(song: Song): Promise<string>;
+    public abstract getMissingSongs(album: Album, currentSongs: Song[]): Promise<Song[]>;
 }
