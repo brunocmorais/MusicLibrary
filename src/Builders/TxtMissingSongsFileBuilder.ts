@@ -1,7 +1,7 @@
 import AnalysisResult from "../Model/AnalysisResult.js";
-import IFileBuilder from "./IFileBuilder.js";
+import IBuilder from "./IBuilder.js";
 
-export default class TxtMissingSongsFileBuilder implements IFileBuilder<AnalysisResult> {
+export default class TxtMissingSongsFileBuilder implements IBuilder<AnalysisResult> {
     
     public async build(source: AnalysisResult): Promise<string> {
         

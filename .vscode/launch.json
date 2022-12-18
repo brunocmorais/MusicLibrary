@@ -15,8 +15,8 @@
             "args": [
                 "start",
                 "analyze",
-                "library.csv",
-                "missingSongs.txt"
+                "download.csv",
+                "music.txt"
             ],
             "preLaunchTask": "Build"
         }

@@ -1,7 +1,7 @@
 import Library from "../Model/Library.js";
-import IFileBuilder from "./IFileBuilder.js";
+import IBuilder from "./IBuilder.js";
 
-export default class CsvLibraryFileBuilder implements IFileBuilder<Library> {
+export default class CsvLibraryFileBuilder implements IBuilder<Library> {
     
     public async build(library: Library) {
         

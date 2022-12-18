@@ -1,3 +1,3 @@
-import CLI from './Components/CLI.js';
+import CLI from "./Components/CLI.js";
 
 await CLI.startProcess();

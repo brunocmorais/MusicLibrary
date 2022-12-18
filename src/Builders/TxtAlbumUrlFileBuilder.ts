@@ -2,9 +2,9 @@ import AbstractFactory from "../Factory/AbstractFactory.js";
 import Album from "../Model/Album.js";
 import { SearcherType } from "../Model/SearcherType.js";
 import ISearcher from "../Searchers/ISearcher.js";
-import IFileBuilder from "./IFileBuilder.js";
+import IBuilder from "./IBuilder.js";
 
-export default class TxtAlbumUrlFileBuilder implements IFileBuilder<Album[]> {
+export default class TxtAlbumUrlFileBuilder implements IBuilder<Album[]> {
     
     private readonly searcher : ISearcher;
 

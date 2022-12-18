@@ -22,7 +22,7 @@ export default class YouTubeSearcher implements ISearcher {
         if (music.length == 0)
             return;
 
-        return "https://music.youtube.com/watch/v?=" + music[0].youtubeId;
+        return "https://music.youtube.com/watch/?v=" + music[0].youtubeId;
     }
 }
 

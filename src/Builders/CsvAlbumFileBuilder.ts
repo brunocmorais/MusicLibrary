@@ -1,8 +1,8 @@
 import Album from "../Model/Album.js";
-import IFileBuilder from "./IFileBuilder.js";
+import IBuilder from "./IBuilder.js";
 
 
-export default class CsvAlbumFileBuilder implements IFileBuilder<Album[]> {
+export default class CsvAlbumFileBuilder implements IBuilder<Album[]> {
 
     public async build(albums: Album[]) {
         

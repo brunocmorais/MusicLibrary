@@ -13,10 +13,11 @@ import M3uBuilder from "../Builders/M3uBuilder.js";
 import AbstractFactory from "../Factory/AbstractFactory.js";
 import Album from "../Model/Album.js";
 import IReader from "../Readers/IReader.js";
-import IFileBuilder from "../Builders/IFileBuilder.js";
+import IBuilder from "../Builders/IBuilder.js";
 import TxtMusicUrlFileBuilder from "../Builders/TxtMusicUrlFileBuilder.js";
 import TxtMissingSongsFileBuilder from "../Builders/TxtMissingSongsFileBuilder.js";
 import AnalysisResult from "../Model/AnalysisResult.js";
+import SpotifyPlaylistBuilder from "../Builders/SpotifyPlaylistBuilder.js";
 
 export default class CLI {
 
@@ -38,6 +39,9 @@ export default class CLI {
                 case "search":
                     await this.search();
                     break;
+                case "buildSpotifyPlaylist":
+                    await this.buildSpotifyPlaylist();
+                    break;
                 case "export":
                     await this.export();
                     break;
@@ -58,6 +62,7 @@ export default class CLI {
         stdout.write("csvAlbums <musicPath> <fileNameToExportCsv>\n");
         stdout.write("analyze <libraryPath> <fileNameToExportMissingSongsTxt>\n");
         stdout.write("search <csvPath> <fileNameToExportTxt>\n");
+        stdout.write("buildSpotifyPlaylist <libraryPath> <playlistId> <token>\n");
         stdout.write("export <libraryPath> <fileNameToExportM3u>\n\n");
     }
 
@@ -138,7 +143,7 @@ export default class CLI {
 
         const csvPath = argv[3];
         const txtPath = argv[4];
-        let builder: IFileBuilder<any>;
+        let builder: IBuilder<any>;
         let reader : IReader<any>; 
         let content: string;
         
@@ -173,4 +178,15 @@ export default class CLI {
 
         stdout.write(`File '${m3uPath}' created successfully!\n`);
     }   
+
+    private static async buildSpotifyPlaylist() {
+
+        const libraryPath = argv[3];
+        const playlistId = argv[4];
+        const token = argv[5];
+        const library = await this.getLibrary(libraryPath);
+        const spotify = new SpotifyPlaylistBuilder(token, playlistId);
+        
+        await spotify.build(library.albums);
+    }
 }

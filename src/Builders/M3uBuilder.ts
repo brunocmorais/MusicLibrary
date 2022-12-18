@@ -1,7 +1,7 @@
 import Library from "../Model/Library.js";
-import IFileBuilder from "./IFileBuilder.js";
+import IBuilder from "./IBuilder.js";
 
-export default class M3uBuilder implements IFileBuilder<Library> {
+export default class M3uBuilder implements IBuilder<Library> {
     
     public async build(library: Library): Promise<string> {
         

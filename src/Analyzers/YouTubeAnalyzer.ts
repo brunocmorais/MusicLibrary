@@ -20,13 +20,18 @@ export default class YouTubeAnalyzer extends AlbumAnalyzer {
             return missingSongs;
 
         const musics = await ytMusic.listMusicsFromAlbum(albums[0].albumId);
+        const unwanted = ["(live", "live)", "(live)", "(demo", "demo)", "(demo)"];
 
         for (const music of musics) {
+
+            if (unwanted.some(x => music.title.toLowerCase().indexOf(x) >= 0))
+                continue;
+
             const musicName = this.sanitizeMusicName(music.title);
 
             if (!currentSongs.some(song => musicName.indexOf(this.sanitizeMusicName(song.title)) < 0)) {
                 const missingSong = new Song(album, music.title, 0, 
-                    music.duration?.totalSeconds, `https://music.youtube.com/watch/v?=${music.youtubeId}`, "");
+                    music.duration?.totalSeconds, `https://music.youtube.com/watch/?v=${music.youtubeId}`, "");
 
                 missingSongs.push(missingSong);
             }
@@ -40,9 +45,7 @@ export default class YouTubeAnalyzer extends AlbumAnalyzer {
 
         const unwantedTerms = [
             "remaster)",
-            "demo)",
-            "live)",
-            "(feat"
+            "(feat"        
         ];
 
         for (const term of unwantedTerms) {

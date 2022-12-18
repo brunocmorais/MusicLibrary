@@ -2,9 +2,9 @@ import AbstractFactory from "../Factory/AbstractFactory.js";
 import Library from "../Model/Library.js";
 import { SearcherType } from "../Model/SearcherType.js";
 import ISearcher from "../Searchers/ISearcher.js";
-import IFileBuilder from "./IFileBuilder.js";
+import IBuilder from "./IBuilder.js";
 
-export default class TxtMusicUrlFileBuilder implements IFileBuilder<Library> {
+export default class TxtMusicUrlFileBuilder implements IBuilder<Library> {
     
     private readonly searcher : ISearcher;
 
