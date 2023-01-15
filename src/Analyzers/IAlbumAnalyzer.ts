@@ -6,5 +6,4 @@ import Song from '../Model/Song.js';
 export default interface IAlbumAnalyzer {
     analyze(library: Library, album : Album): Promise<AnalysisItem[]>;
     getMissingSongs(album: Album, currentSongs: Song[]) : Promise<Song[]>;
-    searchSongUrl(song: Song) : Promise<string>;
 }

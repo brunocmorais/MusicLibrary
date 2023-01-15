@@ -18,13 +18,15 @@ export default class TxtAlbumUrlFileBuilder implements IBuilder<Album[]> {
         
         for (let album of albums) {
 
+            console.info(`Searching album ${album.name} - ${album.artist.name}`);
+
             try {
                 const url = await this.searcher.searchAlbum(album);
 
                 if (url)
                     urls.push(url);
             } catch (e) {
-                console.log("Error getting album: " + e.message);
+                console.error("Error getting album: " + (e as Error).message);
             }
         }
 

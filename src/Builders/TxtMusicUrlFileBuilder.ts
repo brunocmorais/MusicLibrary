@@ -18,13 +18,15 @@ export default class TxtMusicUrlFileBuilder implements IBuilder<Library> {
         
         for (let song of library.songs) {
 
+            console.info(`Getting info from song '${song.title} - ${song.album.artist.name}'.`);
+
             try {
                 const url = await this.searcher.searchSong(song);
 
                 if (url)
                     urls.push(url);
             } catch (e) {
-                console.log("Error getting song: " + e.message);
+                console.error("Error getting song: " + (e as Error).message);
             }
         }
 

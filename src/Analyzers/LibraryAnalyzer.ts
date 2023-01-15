@@ -1,6 +1,5 @@
 import Album from "../Model/Album.js";
 import AnalysisItem from "../Model/AnalysisItem.js";
-import AnalysisResult from "../Model/AnalysisResult.js";
 import Library from "../Model/Library.js";
 import Song from "../Model/Song.js";
 import IAlbumAnalyzer from "./IAlbumAnalyzer.js";
@@ -15,14 +14,12 @@ export default abstract class AlbumAnalyzer implements IAlbumAnalyzer {
         const missingSongs = await this.getMissingSongs(album, currentSongs);
 
         for (const missingSong of missingSongs) {
-            const songUrl = await this.searchSongUrl(missingSong);
-            const analysisItem = new AnalysisItem(missingSong, songUrl);
+            const analysisItem = new AnalysisItem(missingSong, missingSong.path);
             analysisItems.push(analysisItem);
         }
 
         return analysisItems;
     }
 
-    public abstract searchSongUrl(song: Song): Promise<string>;
     public abstract getMissingSongs(album: Album, currentSongs: Song[]): Promise<Song[]>;
 }

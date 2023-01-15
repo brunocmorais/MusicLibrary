@@ -1,4 +1,4 @@
-import AnalysisItem from "./AnalysisItem";
+import AnalysisItem from "./AnalysisItem.js";
 
 export default class AnalysisResult {
 

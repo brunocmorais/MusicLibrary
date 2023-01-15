@@ -1,3 +1,7 @@
 import CLI from "./Components/CLI.js";
 
-await CLI.startProcess();
+const promise = new Promise((resolve, reject) => {
+    CLI.startProcess();
+});
+
+promise.then();

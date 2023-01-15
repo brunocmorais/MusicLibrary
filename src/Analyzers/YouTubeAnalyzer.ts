@@ -19,19 +19,21 @@ export default class YouTubeAnalyzer extends AlbumAnalyzer {
         if (albums.length == 0)
             return missingSongs;
 
-        const musics = await ytMusic.listMusicsFromAlbum(albums[0].albumId);
+        const musics = await ytMusic.listMusicsFromAlbum(albums[0].albumId ?? "");
         const unwanted = ["(live", "live)", "(live)", "(demo", "demo)", "(demo)"];
 
         for (const music of musics) {
 
-            if (unwanted.some(x => music.title.toLowerCase().indexOf(x) >= 0))
+            let musicName = music.title ?? "";
+
+            if (unwanted.some(x => musicName.toLowerCase().indexOf(x) >= 0))
                 continue;
 
-            const musicName = this.sanitizeMusicName(music.title);
+            musicName = this.sanitizeMusicName(musicName);
 
-            if (!currentSongs.some(song => musicName.indexOf(this.sanitizeMusicName(song.title)) < 0)) {
-                const missingSong = new Song(album, music.title, 0, 
-                    music.duration?.totalSeconds, `https://music.youtube.com/watch/?v=${music.youtubeId}`, "");
+            if (!currentSongs.some(song => musicName == this.sanitizeMusicName(song.title))) {
+                const missingSong = new Song(album, music.title ?? "", 0, 
+                    music.duration?.totalSeconds ?? 0, `https://music.youtube.com/watch/?v=${music.youtubeId}`, "");
 
                 missingSongs.push(missingSong);
             }
@@ -41,21 +43,12 @@ export default class YouTubeAnalyzer extends AlbumAnalyzer {
     }
 
     private sanitizeMusicName(music : string) {
-        let musicName = music.toLowerCase().trim().replaceAll("'", "");
+        let musicName = music.toLowerCase().trim();
 
-        const unwantedTerms = [
-            "remaster)",
-            "(feat"        
-        ];
+        if (musicName.indexOf("(") >= 0 || musicName.indexOf(")") >= 0)
+            musicName = musicName.substring(0, musicName.indexOf("(") - 1);
 
-        for (const term of unwantedTerms) {
-            const index = musicName.indexOf(term);
-            
-            if (index >= 0)
-                musicName = musicName.substring(0, musicName.indexOf("(") - 1);
-        }
-
-        return musicName;
+        return musicName.replace(/[^A-Za-z0-9\s]/g, "");
     }
 
     public async searchSongUrl(song: Song): Promise<string> {

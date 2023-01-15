@@ -45,6 +45,9 @@ export default class CLI {
                 case "export":
                     await this.export();
                     break;
+                case "searchSongs":
+                    await this.searchSongs();
+                    break;
                 default:
                     this.printHelp();
                     break;
@@ -63,7 +66,8 @@ export default class CLI {
         stdout.write("analyze <libraryPath> <fileNameToExportMissingSongsTxt>\n");
         stdout.write("search <csvPath> <fileNameToExportTxt>\n");
         stdout.write("buildSpotifyPlaylist <libraryPath> <playlistId> <token>\n");
-        stdout.write("export <libraryPath> <fileNameToExportM3u>\n\n");
+        stdout.write("export <libraryPath> <fileNameToExportM3u>\n");
+        stdout.write("searchSongs <libraryPath> <fileNameToExportTxt>\n\n");
     }
 
     private static async createCsv(type: FileBuilderType) {
@@ -72,7 +76,7 @@ export default class CLI {
         const pathToWrite = argv[4];
         const tagReader = AbstractFactory.buildReaderFactory().build(ReaderType.Tag);
         const library = await tagReader.read(pathToRead) as Library;
-        let csv: string;
+        let csv: string = "";
 
         if (type != FileBuilderType.AlbumCsv && type != FileBuilderType.LibraryCsv)
             throw new Error("Invalid file builder type for this command!");
@@ -111,13 +115,14 @@ export default class CLI {
             
             stdout.write(`Analysis of album ${i + 1} in ${albums.length}.\n`);
             analysisResult.addItems(await analyzer.analyze(library, albums[i]));
-            const content = await (txtBuilder as TxtMissingSongsFileBuilder).build(analysisResult);
+        }
 
-            try {
-                await File.writeAsync(pathToWrite, content);
-            } catch (e) {
-                throw new Error("Could not write file!");
-            }
+        const content = await (txtBuilder as TxtMissingSongsFileBuilder).build(analysisResult);
+
+        try {
+            await File.writeAsync(pathToWrite, content);
+        } catch (e) {
+            throw new Error("Could not write file!");
         }
 
         stdout.write("Library analysis finished!\n");
@@ -188,5 +193,22 @@ export default class CLI {
         const spotify = new SpotifyPlaylistBuilder(token, playlistId);
         
         await spotify.build(library.albums);
+    }
+
+    private static async searchSongs() {
+
+        const libraryPath = argv[3];
+        const txtPath = argv[4];
+
+        const library = await this.getLibrary(libraryPath);
+
+        const builder = AbstractFactory.buildFileBuilderFactory()
+            .build(FileBuilderType.UrlLibraryTxt) as TxtMusicUrlFileBuilder;
+
+        const content = await builder.build(library);
+
+        await File.writeAsync(txtPath, content);
+
+        stdout.write(`File '${txtPath}' created successfully!\n`);
     }
 }

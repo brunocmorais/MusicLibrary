@@ -3,7 +3,7 @@ import Song from '../Model/Song.js';
 import Artist from '../Model/Artist.js';
 import Album from '../Model/Album.js';
 import { parseFile } from 'music-metadata';
-import IReader from './IReader';
+import IReader from './IReader.js';
 import File from '../Components/File.js';
 
 const acceptedFileTypes = [".m4a", ".mp3", ".ogg", ".wma"];
@@ -33,7 +33,7 @@ export default class TagReader implements IReader<Library> {
             const artist = new Artist(info.common.albumartist ?? "");
             const album = new Album(artist, info.common.album ?? "");
             const song = new Song(album, info.common.title ?? "", 
-                info.common.track.no ?? 0, Math.floor(info.format.duration) ?? 0, 
+                info.common.track.no ?? 0, Math.floor(info.format.duration ?? 0), 
                 file, info.common.isrc ? info.common.isrc[0] : "");
 
             library.add(song);

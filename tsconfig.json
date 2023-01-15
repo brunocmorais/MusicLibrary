@@ -2,10 +2,11 @@
     "compilerOptions": {
         "module": "ESNext",
         "target": "ESNext",
-        "moduleResolution": "node",
+        "moduleResolution": "Node16",
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "outDir": "../dist",
-        "sourceMap": true
+    },
+    "ts-node": {
+        "esm": true
     }
 }

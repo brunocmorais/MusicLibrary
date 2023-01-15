@@ -10,7 +10,7 @@ export default class YouTubeSearcher implements ISearcher {
         const albums = await ytMusic.searchAlbums(`${album.name} - ${album.artist.name}`);
     
         if (albums.length == 0)
-            return;
+            return "";
 
         return "https://music.youtube.com/browse/" + albums[0].albumId;
     }
@@ -20,7 +20,7 @@ export default class YouTubeSearcher implements ISearcher {
         const music = await ytMusic.searchMusics(`${song.title} - ${song.album.name} - ${song.album.artist.name}`);
     
         if (music.length == 0)
-            return;
+            return "";
 
         return "https://music.youtube.com/watch/?v=" + music[0].youtubeId;
     }
